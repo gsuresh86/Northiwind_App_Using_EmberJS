@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script type="text/javascript" src="js/libs/jquery/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="js/libs/handlebar/handlebars-1.1.2.js"></script>
+    <script type="text/javascript" src="js/libs/ember/ember-1.2.0.js"></script>
+    <script type="text/javascript" src="js/libs/ember/ember-data.js"></script>
+
+    <script type="text/javascript" src="js/app.js"></script>
+</head>
+<body>
+    <script type="text/x-handlebars">
+        <div class="wrap">
+            <header>
+                <div class="logo">
+                    <span class="app_title">Northwind</span>
+                </div>
+                <div class="navmenu buttons">
+                    <ul>
+                        {{#each}}
+                            {{#linkTo routeID tagName='li'}} <a>{{caption}}</a> {{/linkTo}}
+                        {{/each}}
+                    </ul>
+                </div>
+            </header>
+            <div class="view-container">
+                <div class="searchContainer">
+                    <span class="searchBox"><input type="text" ng-model="query" placeholder="Search"></span>
+                </div>
+                <div class="view-frame">{{outlet}}</div>
+            </div>
+        </div>
+        <!--<ng-overlay class="overlay" ng-show="showOverlay"></ng-overlay>-->
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="employees">
+        <div class="emp-container">
+            <div class="emp-list">
+                <span>Click on the employee name to check more info.</span>
+                {{#each}}
+                <div class="">
+                    <div class="emp-name">
+                        <span class="">{{#link-to "employee" this tagName='span'}} {{FirstName}} {{LastName}} {{/link-to}}</span>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="emp-detail" employee-detail ng-show="showEmployee">{{outlet}}</div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="employee">
+        <div class="emp-info drop-shadow">
+            <div class="profile-pic">
+                <img {{bind-attr src=ImageUrl}}/>
+            </div>
+            <div class="emp-id">
+                <div>Emp. No </div>
+                <div class="empID">{{EmployeeID}}</div>
+            </div>
+            <div class="emp-det-name">
+                <span class="">{{FirstName}}</span>
+                <span class="">{{LastName}}</span>
+            </div>
+            <div class="">Joined {{HireDate}}</div>
+            <div class="emp-biodata">
+                <span class="infoLabel">Personal Info</span>
+                <span>Born On </span> <span class="">{{BirthDate}}</span>
+                <div class="addLabel">Address</div>
+                <div class="">{{Address}}</div>
+                <div class="">{{City}}</div>
+                <div class="">{{Country}} - {{PostalCode}}</div>
+            </div>
+            <div class="emp-contact">
+                <span>Contact</span>
+                <div>HomePhone {{HomePhone}}</div>
+                <div>Extension {{Extension}}</div>
+            </div>
+            <div class="emp-note">
+                <span>Notes</span>
+                <div class="note-data">
+                    {{Notes}}
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="customers">
+        <div class="customerGrid grid drop-shadow">
+            <div class="grid-header">
+                <div class="grid-tr">
+                    <div class="grid-td c1">ContactName</div>
+                    <div class="grid-td c2">CustomerID</div>
+                    <div class="grid-td c5">CompanyName</div>
+                    <div class="grid-td c3">Phone</div>
+                    <div class="grid-td c4">Fax</div>
+                    <div class="grid-td c5">Address</div>
+                    <div class="grid-td c5">City</div>
+                    <div class="grid-td c5">Country</div>
+                </div>
+            </div>
+            <div class="grid-body">
+                {{#each}}
+                <div class="grid-tr" align="">
+                    <div class="grid-td c1">{{ContactName}}</div>
+                    <div class="grid-td c2">{{CustomerID}}</div>
+                    <div class="grid-td c5">{{CompanyName}}</div>
+                    <div class="grid-td c3">{{Phone}}</div>
+                    <div class="grid-td c4">{{Fax}}</div>
+                    <div class="grid-td c5">{{Address}}</div>
+                    <div class="grid-td c5">{{City}}</div>
+                    <div class="grid-td c5">{{Country}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="products">
+        <button class="nav_left"> ‹ </button>
+        <div class="prod-list">
+            {{#each}}
+            <div class="prod-info drop-shadow">
+                <div class="prod-img">
+                    <img {{bind-attr src=ProdImg}}/>
+                </div>
+                <div class="prod_name"><h4>{{ProductName}}</h4></div>
+                <div class="">Price : {{UnitPrice}}</div>
+            </div>
+            {{/each}}
+        </div>
+        <button> › </button>
+     </script>
+</body>
+</html>
