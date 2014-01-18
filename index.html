@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title></title>
+    <title>Northwind</title>
     <link rel="stylesheet" href="css/main.css">
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
@@ -13,7 +13,7 @@
     <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body>
-    <script type="text/x-handlebars">
+    <script type="text/x-handlebars" data-template-name="application">
         <div class="wrap">
             <header>
                 <div class="logo">
@@ -34,7 +34,6 @@
                 <div class="view-frame">{{outlet}}</div>
             </div>
         </div>
-        <!--<ng-overlay class="overlay" ng-show="showOverlay"></ng-overlay>-->
     </script>
 
     <script type="text/x-handlebars" data-template-name="employees">
@@ -49,8 +48,8 @@
                 </div>
                 {{/each}}
             </div>
+            <div class="emp-detail" employee-detail ng-show="showEmployee">{{outlet}}</div>
         </div>
-        <div class="emp-detail" employee-detail ng-show="showEmployee">{{outlet}}</div>
     </script>
 
     <script type="text/x-handlebars" data-template-name="employee">
@@ -104,16 +103,16 @@
                 </div>
             </div>
             <div class="grid-body">
-                {{#each}}
+                {{#each customer in model}}
                 <div class="grid-tr" align="">
-                    <div class="grid-td c1">{{ContactName}}</div>
-                    <div class="grid-td c2">{{CustomerID}}</div>
-                    <div class="grid-td c5">{{CompanyName}}</div>
-                    <div class="grid-td c3">{{Phone}}</div>
-                    <div class="grid-td c4">{{Fax}}</div>
-                    <div class="grid-td c5">{{Address}}</div>
-                    <div class="grid-td c5">{{City}}</div>
-                    <div class="grid-td c5">{{Country}}</div>
+                    <div class="grid-td c1">{{customer.ContactName}}</div>
+                    <div class="grid-td c2">{{customer.CustomerID}}</div>
+                    <div class="grid-td c5">{{customer.CompanyName}}</div>
+                    <div class="grid-td c3">{{customer.Phone}}</div>
+                    <div class="grid-td c4">{{customer.Fax}}</div>
+                    <div class="grid-td c5">{{customer.Address}}</div>
+                    <div class="grid-td c5">{{customer.City}}</div>
+                    <div class="grid-td c5">{{customer.Country}}</div>
                 </div>
                 {{/each}}
             </div>
@@ -121,19 +120,74 @@
     </script>
 
     <script type="text/x-handlebars" data-template-name="products">
-        <button class="nav_left"> ‹ </button>
+        <button class="nav_left" {{action 'navLeft' on='click'}}> < </button>
         <div class="prod-list">
-            {{#each}}
+            {{#each product in filteredProducts}}
             <div class="prod-info drop-shadow">
                 <div class="prod-img">
-                    <img {{bind-attr src=ProdImg}}/>
+                    <img {{bind-attr src=product.ProductImg}}/>
                 </div>
-                <div class="prod_name"><h4>{{ProductName}}</h4></div>
-                <div class="">Price : {{UnitPrice}}</div>
+                <div class="prod_name"><h4>{{product.ProductName}}</h4></div>
+                <div class="">Price : {{product.UnitPrice}}</div>
             </div>
             {{/each}}
         </div>
-        <button> › </button>
+        <button class="nav_right" {{action 'navRight' on='click'}}> > </button>
      </script>
+
+    <script type="text/x-handlebars" data-template-name="orders">
+        <div class="orderGrid grid drop-shadow">
+            <div class="grid-nav">
+                <button {{action 'navFirst' on='click'}} {{bindAttr disabled='disableFirst'}}><span> &#171; </span> </button>
+                <button {{action 'navLeft' on='click'}} {{bindAttr disabled='disableLeft'}}><span> &#8249; </span> </button>
+                <button class="pageValue"><span>{{currentPage}} / {{ noOfPages}}</span></button>
+                <button {{action 'navRight' on='click'}} {{bindAttr disabled='disableRight'}}><span> &#8250; </span> </button>
+                <button {{action 'navLast' on='click'}} {{bindAttr disabled='disableLast'}}><span> &#187; </span> </button>
+                <button {{action 'showAll' on='click'}} class='showAllBtn'><span>{{showAllCaption}}</span></button>
+                <div class="gotoPage">
+                    {{input type="number" value=selPage}}
+                    <button {{action 'gotoPage' on='click'}} class='selPage' {{bindAttr disabled='disableGoto'}}>
+                        <span>Goto</span>
+                    </button>
+                </div>
+            </div>
+            <div class="grid-header">
+                <div class="grid-tr">
+                    <div class="grid-td c1">OrderID</div>
+                    <div class="grid-td c2">OrderDate</div>
+                    <div class="grid-td c5">CustomerID</div>
+                    <div class="grid-td c3">ShippedDate</div>
+                    <div class="grid-td c4">Freight</div>
+                    <div class="grid-td c5">ShipCity</div>
+                    <div class="grid-td c5">ShipCountry</div>
+                </div>
+            </div>
+            <div class="grid-body" {{bind-attr class=showAllClass}}>
+                {{#each order in filteredProducts}}
+                <div class="grid-tr">
+                    <div class="grid-td c1">{{order.OrderID}}</div>
+                    <div class="grid-td c2">{{order.OrderDate}}</div>
+                    <div class="grid-td c5">{{order.CustomerID}}</div>
+                    <div class="grid-td c3">{{order.ShippedDate}}</div>
+                    <div class="grid-td c4">{{order.Freight}}</div>
+                    <div class="grid-td c5">{{order.ShipCity}}</div>
+                    <div class="grid-td c5">{{order.ShipCountry}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="suppliers">
+        <div class="supp_list">
+            {{#each supplier in model}}
+            <div class="supp_cont">
+                <div><span>ShipperID :</span> {{supplier.ShipperID}}</div>
+                <div><span>Company Name :</span> {{supplier.CompanyName}}</div>
+                <div><span>Phone : </span>{{supplier.Phone}}</div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
 </body>
 </html>
